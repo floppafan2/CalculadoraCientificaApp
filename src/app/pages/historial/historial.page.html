@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historial</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        color="danger"
+        (click)="limpiarTodo()"
+        [disabled]="operaciones.length === 0">
+        Limpiar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  @if (operaciones.length === 0) {
+    <p class="ion-text-center">No hay operaciones registradas todavía.</p>
+  } @else {
+    <ion-list>
+      @for (op of operaciones; track op.id) {
+        <ion-item>
+          <ion-label>
+            <h3>{{ op.expresion }} = <strong>{{ op.resultado }}</strong></h3>
+            <p>{{ op.fecha }}</p>
+          </ion-label>
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="danger"
+            (click)="eliminar(op.id)"
+            aria-label="Eliminar operación">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

@@ -1,27 +1,117 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.calc-content {
+  --background: #121212;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.calc-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 12px 24px;
+  gap: 12px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+/* Pantalla de resultados */
+.display-area {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-height: 130px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
 
-  color: #8c8c8c;
+.expression-label {
+  width: 100%;
+  text-align: right;
+  font-size: 1.15rem;
+  color: #a0a0a0;
+  min-height: 28px;
+  word-break: break-all;
+}
 
+.result-input {
+  --color: #ffffff;
+  --padding-start: 0;
+  --padding-end: 0;
+  text-align: right;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Cuadrículas de botones */
+.keypad-grid {
+  width: 100%;
+  padding: 0;
+
+  ion-col {
+    padding: 4px;
+  }
+}
+
+.scientific-grid {
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Botones científicos */
+.btn-sci {
+  --background: #2b2d42;
+  --background-activated: #3d405b;
+  --color: #e0e1dd;
+  --border-radius: 12px;
+  height: 46px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: none;
   margin: 0;
 }
 
-#container a {
-  text-decoration: none;
+/* Botones principales */
+.btn-main {
+  --border-radius: 14px;
+  height: 62px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.btn-num {
+  --background: #262626;
+  --background-activated: #3a3a3a;
+  --color: #ffffff;
+}
+
+.btn-op {
+  --background: #3a3a4a;
+  --background-activated: #4f4f66;
+  --color: #64b5f6;
+}
+
+.btn-clear,
+.btn-equals {
+  font-weight: 700;
+}
+
+/* Ajuste para tabletas y pantallas más grandes */
+@media (min-width: 768px) {
+  .calc-container {
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .btn-main {
+    height: 68px;
+    font-size: 1.45rem;
+  }
+
+  .btn-sci {
+    height: 52px;
+  }
 }

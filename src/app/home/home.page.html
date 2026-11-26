@@ -1,21 +1,163 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Blank </ion-title>
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar color="dark">
+    <ion-title>Calculadora Científica</ion-title>
+    <!-- Botón opcional para navegar al historial (Sesión 2) -->
+    <ion-buttons slot="end">
+      <ion-button routerLink="/historial" fill="clear" aria-label="Ver historial">
+        <ion-icon slot="icon-only" name="time-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="calc-content">
+  <div class="calc-container">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>
-      Start with Ionic
-      <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a>
-    </p>
+    <!-- 1. PANTALLA DE RESULTADOS -->
+    <div class="display-area">
+      <ion-label class="expression-label">
+        {{ expresion || '0' }}
+      </ion-label>
+
+      <ion-input
+        class="result-input"
+        [value]="resultado"
+        readonly="true"
+        placeholder="0"
+        aria-label="Resultado de la operación">
+      </ion-input>
+      @if (mensajeError) {
+        <ion-label color="danger" class="error-label">{{ mensajeError }}</ion-label>
+      }
+    </div>
+
+   <!-- 2. SECCIÓN DE OPERACIONES CIENTÍFICAS Y PARÉNTESIS -->
+    <ion-grid class="keypad-grid scientific-grid">
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('sin(')">sin</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('cos(')">cos</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('tan(')">tan</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('(')">(</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('asin(')">asin</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('acos(')">acos</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('atan(')">atan</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar(')')">)</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('√(')">√</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('log(')">log</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('ln(')">ln</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-sci" (click)="presionar('^')">^</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- 3. TECLADO NUMÉRICO Y OPERACIONES BÁSICAS -->
+    <ion-grid class="keypad-grid main-grid">
+      <!-- Fila 1: Borrar todo, retroceso y operadores -->
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" color="danger" class="btn-main btn-clear" (click)="limpiar()">C</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-op" (click)="borrarUltimo()" aria-label="Borrar último carácter">⌫</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-op" (click)="presionar('%')">%</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-op" (click)="presionar('/')">/</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- Fila 2: 7, 8, 9, * -->
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('7')">7</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('8')">8</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('9')">9</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-op" (click)="presionar('*')">*</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- Fila 3: 4, 5, 6, - -->
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('4')">4</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('5')">5</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('6')">6</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-op" (click)="presionar('-')">-</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- Fila 4: 1, 2, 3, + -->
+      <ion-row>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('1')">1</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('2')">2</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('3')">3</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-op" (click)="presionar('+')">+</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- Fila 5: 0, punto decimal e igual -->
+      <ion-row>
+        <ion-col size="6">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('0')">0</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" class="btn-main btn-num" (click)="presionar('.')">.</ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button expand="block" color="primary" class="btn-main btn-equals" (click)="calcular()">=</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
   </div>
 </ion-content>
